@@ -13,6 +13,7 @@ script:
 - (cd backend && ./build.sh)
   && (cd frontend && ./build.sh)
   && (cd acceptance-tests && ./build.sh && ./upload-serenity-reports.sh)
+  && (cd services/flightinformation && ./build.sh)
 addons:
   #Browser is used by the acceptance tests
   firefox: '42.0'

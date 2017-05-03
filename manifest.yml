@@ -15,3 +15,10 @@ applications:
   buildpack: https://github.com/cloudfoundry/staticfile-buildpack.git#v1.3.16
   memory: 64M
   disk_quota: 64M
+- name: flightinformation
+  path: services/flightinformation/target/flightinformation-0.0.1-SNAPSHOT.jar
+  buildpack: https://github.com/cloudfoundry/java-buildpack.git#v3.10
+  memory: 768M
+  disk_quota: 256M
+  services:
+   - Educama-MongoDB
