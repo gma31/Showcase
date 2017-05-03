@@ -2,8 +2,8 @@ package org.educama.flightconnection.datafeed;
 
 
 import org.educama.airline.businessservice.AirlineBusinessService;
-import org.educama.airport.businessservice.AirportBusinessService;
 import org.educama.airline.model.Airline;
+import org.educama.airport.businessservice.AirportBusinessService;
 import org.educama.airport.model.Airport;
 import org.educama.flightconnection.model.Connection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+
 
 @Component
 public class ConnectionCsvDeserializer {
