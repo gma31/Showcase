@@ -1,7 +1,5 @@
 package org.educama.services.flightinformation;
 
-import org.educama.services.flightinformation.hello.Airport;
-import org.educama.services.flightinformation.hello.AirportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

@@ -1,7 +1,8 @@
-package org.educama.services.flightinformation.hello;
+package org.educama.services.flightinformation;
 
 import java.util.List;
 
+import org.educama.services.flightinformation.Airport;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface AirportRepository extends MongoRepository<Airport, String> {
