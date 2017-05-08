@@ -11,6 +11,7 @@ import java.util.List;
 public interface CsvDeserializer<T> {
     /**
      * deserialize the stream into a collection of {@link T}
+     *
      * @param in
      * @return the deserialized instances. Otherwise an empty Lit
      */

@@ -1,5 +1,6 @@
-package org.educama.services.flightinformation;
+package org.educama.services.flightinformation.repositories;
 
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.data.annotation.Id;
 
 public class Airport {
@@ -58,11 +59,11 @@ public class Airport {
     }
 
     public void setIataCode(String iataCode) {
-        this.iataCode = iataCode;
+        this.iataCode = iataCode.toUpperCase();
     }
 
     public String getIcaoCode() {
-        return icaoCode;
+        return icaoCode.toUpperCase();
     }
 
     public void setIcaoCode(String icaoCode) {
@@ -95,24 +96,48 @@ public class Airport {
         return this;
     }
 
-    private Airport withIataCode(String iataCode) {
-        this.iataCode = iataCode;
+    public Airport withCountry(String country) {
+        this.country = country;
         return this;
     }
 
-    private Airport withIcaoCode(String icaoCode) {
-        this.icaoCode = icaoCode;
+    public Airport withIataCode(String iataCode) {
+        this.iataCode = iataCode.toUpperCase();
         return this;
     }
 
-    private Airport withLatitude(double latitude) {
+    public Airport withIcaoCode(String icaoCode) {
+        this.icaoCode = icaoCode.toUpperCase();
+        return this;
+    }
+
+    public Airport withLatitude(double latitude) {
         this.latitude = latitude;
         return this;
     }
 
-    private Airport withLongitude(double longitude) {
+    public Airport withLongitude(double longitude) {
         this.longitude = longitude;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Airport)) {
+            return false;
+        }
+        if (obj == this) {
+            return true;
+        }
+        Airport airport = (Airport) obj;
+        return this.iataCode.equalsIgnoreCase(((Airport) obj).iataCode);
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 1).append(iataCode.toUpperCase())
+                .toHashCode();
+
     }
 
     @Override
