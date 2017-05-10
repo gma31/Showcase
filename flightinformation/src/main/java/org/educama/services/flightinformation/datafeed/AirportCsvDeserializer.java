@@ -1,6 +1,6 @@
 package org.educama.services.flightinformation.datafeed;
 
-import org.educama.services.flightinformation.repositories.Airport;
+import org.educama.services.flightinformation.model.Airport;
 import org.springframework.stereotype.Component;
 import org.supercsv.cellprocessor.Optional;
 import org.supercsv.cellprocessor.ParseDouble;

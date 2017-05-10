@@ -1,16 +1,16 @@
 package org.educama.services.flightinformation.controller;
 
-import org.educama.services.flightinformation.repositories.Airport;
-import org.educama.services.flightinformation.repositories.AirportRepository;
+import org.educama.services.flightinformation.model.Airport;
+import org.educama.services.flightinformation.repository.AirportRepository;
 import org.educama.services.flightinformation.datafeed.AirportCsvDeserializer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 public class AirportController {
@@ -18,6 +18,8 @@ public class AirportController {
     AirportRepository airportRepository;
     @Autowired
     AirportCsvDeserializer airportCsvDeserializer;
+    protected int maxSuggestions = 10;
+
 
     /**
      * Retrieves an airport by its IATA code
@@ -25,9 +27,18 @@ public class AirportController {
      * @param iata the IATA Code
      * @return the airport.
      */
-    @RequestMapping("/airport/{iata}")
+    @RequestMapping("/airports/{iata}")
     public List<Airport> getAirport(@PathVariable String iata) {
         return airportRepository.findByIataCode(iata.toUpperCase());
+    }
+
+    /**
+     * Retrieves all airports.
+     * @return the airports
+     */
+    @RequestMapping("/airports")
+    public List<Airport> getAllAirports(){
+        return airportRepository.findAll();
     }
 
     /**
@@ -37,8 +48,17 @@ public class AirportController {
      * @return the list of matching airports.
      */
     @RequestMapping("/airports/suggestions")
-    public List<Airport> getAirportSuggestions(@RequestParam(value = "term", defaultValue = "FR") String term) {
-        return airportRepository.findByIataCodeLike(term.toUpperCase());
+    public List<Airport> getAirportSuggestions(@RequestParam(value = "term") String term) {
+
+        List<Airport> suggestions = new ArrayList<>();
+        if (term == null || term.isEmpty()) {
+            return suggestions;
+        }
+        suggestions = airportRepository.findByIataCodeLike(term.toUpperCase());
+
+        return suggestions.stream()
+                .limit(maxSuggestions)
+                .collect(Collectors.toList());
     }
 
     /**
@@ -58,5 +78,6 @@ public class AirportController {
         airportRepository.save(airports);
 
     }
+
 
 }

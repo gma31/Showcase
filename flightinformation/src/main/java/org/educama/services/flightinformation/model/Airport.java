@@ -1,4 +1,4 @@
-package org.educama.services.flightinformation.repositories;
+package org.educama.services.flightinformation.model;
 
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.springframework.data.annotation.Id;
@@ -6,8 +6,6 @@ import org.springframework.data.annotation.Id;
 public class Airport {
     @Id
     private String id;
-
-
     private String name;
     private String city;
     private String country;
@@ -59,7 +57,7 @@ public class Airport {
     }
 
     public void setIataCode(String iataCode) {
-        this.iataCode = iataCode.toUpperCase();
+        this.iataCode = iataCode != null ? iataCode.toUpperCase() : iataCode;
     }
 
     public String getIcaoCode() {
@@ -67,7 +65,7 @@ public class Airport {
     }
 
     public void setIcaoCode(String icaoCode) {
-        this.icaoCode = icaoCode;
+        this.icaoCode = icaoCode != null ? icaoCode.toUpperCase() : icaoCode;
     }
 
     public double getLatitude() {
@@ -102,12 +100,12 @@ public class Airport {
     }
 
     public Airport withIataCode(String iataCode) {
-        this.iataCode = iataCode.toUpperCase();
+        setIataCode(iataCode);
         return this;
     }
 
     public Airport withIcaoCode(String icaoCode) {
-        this.icaoCode = icaoCode.toUpperCase();
+        setIcaoCode(icaoCode);
         return this;
     }
 

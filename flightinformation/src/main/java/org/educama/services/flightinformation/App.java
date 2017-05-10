@@ -1,13 +1,11 @@
 package org.educama.services.flightinformation;
 
-import org.educama.services.flightinformation.repositories.AirportRepository;
+import org.educama.services.flightinformation.repository.AirportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-/**
- * Hello world!
- */
+
 @SpringBootApplication
 public class App {
     @Autowired

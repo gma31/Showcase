@@ -2,7 +2,7 @@ package org.educama.services.flightinformation.datafeed;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.educama.services.flightinformation.repositories.Airport;
+import org.educama.services.flightinformation.model.Airport;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**

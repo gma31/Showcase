@@ -1,5 +1,6 @@
-package org.educama.services.flightinformation.repositories;
+package org.educama.services.flightinformation.repository;
 
+import org.educama.services.flightinformation.model.Airport;
 import org.junit.Before;
 import org.junit.Test;
 

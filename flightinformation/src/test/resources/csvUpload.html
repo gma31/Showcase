@@ -1,0 +1,33 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<style>
+.chart{
+    float: left;
+    margin: 10px 10px 10px 10px;
+    padding: 10px 50px 50px 10px;
+	border-style:solid;
+	border-color: #595978;
+	border-width:1px;
+  
+}
+</style>
+<body>
+
+	<div th:if="${message}">
+		<h2 th:text="${message}"/>
+		<h2>Upload Airports Data</h2>
+		this is a little snippet for uploading csv file to the flightinfo service<br>
+		The csv is posted as multipart form data to:<i> http://localhost:8080/airport/import/csv</i>
+		
+	</div>
+
+	<div class="chart">
+		<form method="POST" enctype="multipart/form-data" action="http://localhost:8080/airport/import/csv">
+			<table>
+			<tr>Please select the csv file</tr>
+				<tr><td><input type="file" name="file" /></td></tr>
+				<tr><td><input type="submit" value="Upload" /></td></tr>
+			</table>
+		</form>
+	</div>
+</body>
+</html>
