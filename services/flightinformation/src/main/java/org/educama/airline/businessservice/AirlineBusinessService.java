@@ -9,6 +9,8 @@ import org.educama.airline.datafeed.AirlineCsvDeserializer;
 import org.educama.airline.model.Airline;
 import org.educama.airline.repository.AirlineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,8 +33,8 @@ public class AirlineBusinessService {
         this.airlineCsvDeserializer = airlineCsvDeserializer;
     }
 
-    public List<Airline> findAllAirlines() {
-        return airlineRepository.findAll();
+    public Page<Airline> findAllAirlines(Pageable pageable) {
+        return airlineRepository.findAll(pageable);
     }
 
     public List<Airline> findAirlinesByIataCode(String iataCode) {

@@ -6,24 +6,32 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ConnectionBusinessServiceUnitTest {
+    Pageable pageable;
     @Mock
     ConnectionRepository connectionRepository;
+
     @InjectMocks
     ConnectionBusinessService cut;
+
+    public void setUp() {
+        pageable = new PageRequest(0, 1);
+    }
 
     @Test
     public void findFlightConnection_returnsEmptyList_whenNoSourceAirport() {
         //Given
         final String destinationAirport = "LAX";
         //Then
-        assertThat(cut.findFlightConnection(null, destinationAirport)).isEmpty();
-        assertThat(cut.findFlightConnection("", destinationAirport)).isEmpty();
+        assertThat(cut.findFlightConnection(null, destinationAirport, pageable)).isEmpty();
+        assertThat(cut.findFlightConnection("", destinationAirport, pageable)).isEmpty();
     }
 
     @Test
@@ -31,8 +39,8 @@ public class ConnectionBusinessServiceUnitTest {
         //Given
         final String sourceAirport = "LAX";
         //Then
-        assertThat(cut.findFlightConnection(sourceAirport, null)).isEmpty();
-        assertThat(cut.findFlightConnection(sourceAirport, "")).isEmpty();
+        assertThat(cut.findFlightConnection(sourceAirport, null, pageable)).isEmpty();
+        assertThat(cut.findFlightConnection(sourceAirport, "", pageable)).isEmpty();
     }
 
     @Test
@@ -41,20 +49,19 @@ public class ConnectionBusinessServiceUnitTest {
         final String sourceAirport = "fra";
         final String destinationAirport = "LAX";
         //When
-        cut.findFlightConnection(sourceAirport, destinationAirport);
+        cut.findFlightConnection(sourceAirport, destinationAirport, pageable);
         //Then
-        verify(connectionRepository).findBySourceAirportIataCodeAndDestinationAirportIataCode(sourceAirport.toUpperCase(), destinationAirport);
+        verify(connectionRepository).findBySourceAirportIataCodeAndDestinationAirportIataCode(sourceAirport.toUpperCase(), destinationAirport, pageable);
     }
 
     @Test
     public void findFlightConnection_returnsConnectionsFromSourceAirport_whenOnlySourceAirportSpecified() {
         //Given
         final String source = "LAX";
-        //When
-        cut.findAllConnectionsFromSourceToDestionation(source, null);
-        //Then
-        verify(connectionRepository).findBySourceAirportIataCode(source);
 
+        cut.findAllConnectionsFromSourceToDestionation(source, null, pageable);
+        //Then
+        verify(connectionRepository).findBySourceAirportIataCode(source.toUpperCase(), pageable);
 
     }
 
@@ -63,10 +70,9 @@ public class ConnectionBusinessServiceUnitTest {
         //Given
         final String destination = "LAX";
         //When
-        cut.findAllConnectionsFromSourceToDestionation(null, destination);
+        cut.findAllConnectionsFromSourceToDestionation(null, destination, pageable);
         //Then
-        verify(connectionRepository).findBydestinationAirportIataCode(destination);
-
+        verify(connectionRepository).findBydestinationAirportIataCode(destination.toUpperCase(), pageable);
     }
 
 

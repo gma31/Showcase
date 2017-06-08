@@ -10,6 +10,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -33,6 +35,8 @@ public class AirportBusinessServiceUnitTest {
 
     @Mock
     InputStream inputStream;
+    @Mock
+    Pageable pageable;
 
     @Mock
     AirportCsvDeserializer airportCsvDeserializer;
@@ -113,12 +117,13 @@ public class AirportBusinessServiceUnitTest {
 
     @Test
     public void getAllAirports_returnsAllAirports() {
+        //Given
 
         // When
-        cut.findAllAirports();
+        cut.findAllAirports(pageable);
 
         // Then
-        verify(airportRepository).findAll();
+        verify(airportRepository).findAll(pageable);
     }
 
 }

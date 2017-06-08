@@ -7,6 +7,8 @@ import java.util.List;
 import org.educama.airline.businessservice.AirlineBusinessService;
 import org.educama.airline.model.Airline;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,8 +34,8 @@ public class AirlineController {
      * @return
      */
     @RequestMapping("/airlines")
-    public List<Airline> getAirlines() {
-        return airlineBusinessService.findAllAirlines();
+    public Page<Airline> getAirlines(Pageable pageable) {
+        return airlineBusinessService.findAllAirlines(pageable);
     }
 
     /**

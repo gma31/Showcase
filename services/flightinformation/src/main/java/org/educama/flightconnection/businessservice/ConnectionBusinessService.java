@@ -4,6 +4,9 @@ import org.educama.flightconnection.datafeed.ConnectionCsvDeserializer;
 import org.educama.flightconnection.model.Connection;
 import org.educama.flightconnection.repository.ConnectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,11 +28,12 @@ public class ConnectionBusinessService {
         this.connectionCsvDeserializer = connectionCsvDeserializer;
     }
 
-    public List<Connection> findFlightConnection(String sourceIataCode, String destinationIataCode) {
+
+    public Page<Connection> findFlightConnection(String sourceIataCode, String destinationIataCode, Pageable pageable) {
         if (StringUtils.isEmpty(sourceIataCode) || StringUtils.isEmpty(destinationIataCode)) {
-            return Collections.emptyList();
+            return new PageImpl<Connection>(Collections.emptyList());
         }
-        return connectionRepository.findBySourceAirportIataCodeAndDestinationAirportIataCode(sourceIataCode.toUpperCase(), destinationIataCode.toUpperCase());
+        return connectionRepository.findBySourceAirportIataCodeAndDestinationAirportIataCode(sourceIataCode.toUpperCase(), destinationIataCode.toUpperCase(), pageable);
     }
 
     public void clearAndImportConnections(MultipartFile file) throws IOException {
@@ -40,18 +44,18 @@ public class ConnectionBusinessService {
 
     }
 
-    public List<Connection> findAllConnectionsFromSourceToDestionation(String sourceAirportIataCode, String destinationAirportIataCode) {
+    public Page<Connection> findAllConnectionsFromSourceToDestionation(String sourceAirportIataCode, String destinationAirportIataCode, Pageable pageable) {
         if (StringUtils.isEmpty(sourceAirportIataCode) && StringUtils.isEmpty(destinationAirportIataCode)) {
-            return Collections.emptyList();
+            return new PageImpl<Connection>(Collections.emptyList());
         }
         if (!StringUtils.isEmpty(sourceAirportIataCode) && StringUtils.isEmpty(destinationAirportIataCode)) {
-            return connectionRepository.findBySourceAirportIataCode(sourceAirportIataCode.toUpperCase());
+            return connectionRepository.findBySourceAirportIataCode(sourceAirportIataCode.toUpperCase(), pageable);
         }
         if (StringUtils.isEmpty(sourceAirportIataCode) && !StringUtils.isEmpty(destinationAirportIataCode)) {
-            return connectionRepository.findBydestinationAirportIataCode(destinationAirportIataCode.toUpperCase());
+            return connectionRepository.findBydestinationAirportIataCode(destinationAirportIataCode.toUpperCase(), pageable);
         }
 
-        return connectionRepository.findBySourceAirportIataCodeAndDestinationAirportIataCode(sourceAirportIataCode.toUpperCase(), destinationAirportIataCode.toUpperCase());
+        return connectionRepository.findBySourceAirportIataCodeAndDestinationAirportIataCode(sourceAirportIataCode.toUpperCase(), destinationAirportIataCode.toUpperCase(), pageable);
     }
 
 
