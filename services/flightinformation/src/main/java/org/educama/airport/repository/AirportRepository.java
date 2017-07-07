@@ -16,8 +16,14 @@ public interface AirportRepository extends MongoRepository<Airport, String> {
 
     List<Airport> findTop10ByNameIsStartingWithOrIataCodeIsStartingWithOrIcaoCodeIsStartingWithAllIgnoreCase(String name, String iataCode, String icaoCode);
 
+    List<Airport> findByIataCodeOrIcaoCodeAllIgnoreCase(String iataCode, String icaoCode);
+
     default List<Airport> findBySearchTerm(String term) {
         return findTop10ByNameIsStartingWithOrIataCodeIsStartingWithOrIcaoCodeIsStartingWithAllIgnoreCase(term, term, term);
+    }
+
+    default List<Airport> findByAirportCode(String term) {
+        return findByIataCodeOrIcaoCodeAllIgnoreCase(term, term);
     }
 
 }

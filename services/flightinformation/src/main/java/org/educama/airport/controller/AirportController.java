@@ -3,14 +3,15 @@ package org.educama.airport.controller;
 import org.educama.airport.businessservice.AirportBusinessService;
 import org.educama.airport.model.Airport;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Rest controller of the airport resources.
@@ -32,8 +33,8 @@ public class AirportController {
      * @return the airports
      */
     @RequestMapping("/airports")
-    public Page<Airport> getAirports(Pageable pageable) {
-        return airportBusinessService.findAllAirports(pageable);
+    public List<Airport> getAirports() {
+        return airportBusinessService.findAllAirports();
     }
 
     /**
@@ -42,15 +43,13 @@ public class AirportController {
      * @param airportCode the IATA Code
      * @return the airport.
      */
-    @RequestMapping("/airports/{airportCode}")
+    @RequestMapping(path = "/airports/{airportCode}")
     public List<Airport> getAirportByIataCodeOrIcaoCode(@PathVariable String airportCode) {
         Set<Airport> airportSet = new HashSet<Airport>();
         if (StringUtils.isEmpty(airportCode)) {
             return Collections.emptyList();
         }
-        airportSet.addAll(airportBusinessService.findAirportByIataCode(airportCode));
-        airportSet.addAll(airportBusinessService.findAirportByIcaoCode(airportCode));
-        return new ArrayList<>(airportSet);
+        return airportBusinessService.findAirportsByIataCodeOrIcaoCode(airportCode);
 
     }
 

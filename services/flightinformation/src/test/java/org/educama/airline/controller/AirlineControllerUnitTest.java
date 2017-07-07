@@ -32,8 +32,7 @@ public class AirlineControllerUnitTest {
     public void getAirlinesByIataCodeOrIcaoCodeLooksUpBasedOnIataOrIcaoCode() {
         String term = "iata or icao";
         cut.getAirlinesByIataCodeOrIcaoCode(term);
-        verify(airlineBusinessService).findAirlinesByIataCode(term);
-        verify(airlineBusinessService).findAirlinesByIcaoCode(term);
+        verify(airlineBusinessService).findByAirlineByIataCodeOrIcaoCode(term);
     }
 
     @Test

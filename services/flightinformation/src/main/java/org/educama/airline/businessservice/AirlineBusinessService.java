@@ -4,8 +4,6 @@ import org.educama.airline.datafeed.AirlineCsvDeserializer;
 import org.educama.airline.model.Airline;
 import org.educama.airline.repository.AirlineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,7 +22,6 @@ public class AirlineBusinessService {
 
     private AirlineCsvDeserializer airlineCsvDeserializer;
 
-    protected static final int MAX_SUGGESTIONS = 10;
 
     @Autowired
     public AirlineBusinessService(AirlineRepository airlineRepository, AirlineCsvDeserializer airlineCsvDeserializer) {
@@ -32,9 +29,6 @@ public class AirlineBusinessService {
         this.airlineCsvDeserializer = airlineCsvDeserializer;
     }
 
-    public Page<Airline> findAllAirlines(Pageable pageable) {
-        return airlineRepository.findAll(pageable);
-    }
 
     public List<Airline> findAirlinesByIataCode(String iataCode) {
         if (StringUtils.isEmpty(iataCode)) {
@@ -58,11 +52,19 @@ public class AirlineBusinessService {
         return airlineRepository.findBySearchTerm(term);
     }
 
+    public List<Airline> findByAirlineByIataCodeOrIcaoCode(String airportCode) {
+        return airlineRepository.findByAirportCode(airportCode);
+    }
+
     public void clearAndImportAirlines(MultipartFile file) throws IOException {
         List<Airline> airlines = airlineCsvDeserializer.deserialize(file.getInputStream());
 
         airlineRepository.deleteAll();
         airlineRepository.save(airlines);
+    }
+
+    public List<Airline> findAllAirlines() {
+        return airlineRepository.findAll();
     }
 
 }

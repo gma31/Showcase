@@ -33,8 +33,7 @@ public class AirportControllerUnitTest {
     public void getAirportByIataCodeOrIcaoCodeLooksUpBasedOnIataOrIcaoCode() {
         String term = "iata or icao";
         cut.getAirportByIataCodeOrIcaoCode(term);
-        verify(airportBusinessService).findAirportByIataCode(term);
-        verify(airportBusinessService).findAirportByIcaoCode(term);
+        verify(airportBusinessService).findAirportsByIataCodeOrIcaoCode(term);
     }
 
     @Test

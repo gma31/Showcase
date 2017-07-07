@@ -9,7 +9,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -34,8 +33,6 @@ public class AirportBusinessServiceUnitTest {
     @Mock
     InputStream inputStream;
 
-    @Mock
-    Pageable pageable;
 
     @Mock
     AirportCsvDeserializer airportCsvDeserializer;
@@ -65,8 +62,8 @@ public class AirportBusinessServiceUnitTest {
 
     @Test
     public void getAllAirportsReturnsAllAirports() {
-        cut.findAllAirports(pageable);
-        verify(airportRepository).findAll(pageable);
+        cut.findAllAirports();
+        verify(airportRepository).findAll();
     }
 
 }

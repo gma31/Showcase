@@ -4,14 +4,15 @@ package org.educama.airline.controller;
 import org.educama.airline.businessservice.AirlineBusinessService;
 import org.educama.airline.model.Airline;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Rest controller of the airline resources.
@@ -33,8 +34,8 @@ public class AirlineController {
      * @return the airlines
      */
     @RequestMapping("/airlines")
-    public Page<Airline> getAirlines(Pageable pageable) {
-        return airlineBusinessService.findAllAirlines(pageable);
+    public List<Airline> getAirlines() {
+        return airlineBusinessService.findAllAirlines();
     }
 
     /**
@@ -49,9 +50,7 @@ public class AirlineController {
         if (StringUtils.isEmpty(airportCode)) {
             return Collections.emptyList();
         }
-        airlineSet.addAll(airlineBusinessService.findAirlinesByIataCode(airportCode));
-        airlineSet.addAll(airlineBusinessService.findAirlinesByIcaoCode(airportCode));
-        return new ArrayList<>(airlineSet);
+        return airlineBusinessService.findByAirlineByIataCodeOrIcaoCode(airportCode);
 
     }
 
@@ -80,5 +79,10 @@ public class AirlineController {
     @ResponseBody
     public void importAirlines(@RequestParam("file") MultipartFile file) throws IOException {
         airlineBusinessService.clearAndImportAirlines(file);
+    }
+
+    @RequestMapping(path = "/apitest/airlines")
+    public List<Airline> getAllAirlines() {
+        return airlineBusinessService.findAllAirlines();
     }
 }

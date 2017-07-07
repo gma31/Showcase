@@ -4,8 +4,6 @@ import org.educama.airport.datafeed.AirportCsvDeserializer;
 import org.educama.airport.model.Airport;
 import org.educama.airport.repository.AirportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,8 +29,8 @@ public class AirportBusinessService {
         this.airportCsvDeserializer = airportCsvDeserializer;
     }
 
-    public Page<Airport> findAllAirports(Pageable pageable) {
-        return airportRepository.findAll(pageable);
+    public List<Airport> findAllAirports() {
+        return airportRepository.findAll();
     }
 
     public List<Airport> findAirportByIataCode(String iataCode) {
@@ -47,6 +45,13 @@ public class AirportBusinessService {
             return Collections.emptyList();
         }
         return airportRepository.findByIcaoCodeIgnoreCase(icaoCode);
+    }
+
+    public List<Airport> findAirportsByIataCodeOrIcaoCode(String airportCode) {
+        if (StringUtils.isEmpty(airportCode)) {
+            return Collections.emptyList();
+        }
+        return airportRepository.findByAirportCode(airportCode);
     }
 
     public List<Airport> findAirportSuggestionsBySearchTerm(String term) {

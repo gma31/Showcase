@@ -3,12 +3,11 @@ package org.educama.flightconnection.controller;
 import org.educama.flightconnection.businessservice.FlightConnectionBusinessService;
 import org.educama.flightconnection.model.FlightConnection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Rest controller of the airline resources.
@@ -32,8 +31,8 @@ public class FlightConnectionController {
      * @return The available flight connections.
      */
     @RequestMapping(value = "/connections")
-    public Page<FlightConnection> getAllConnectionFromSourceToDestination(@RequestParam(value = "from") String sourceAirportIata, @RequestParam(value = "to") String destinationAirportIata, Pageable pageable) {
-        return flightConnectionBusinessService.findAllConnectionsFromSourceToDestionation(sourceAirportIata, destinationAirportIata, pageable);
+    public List<FlightConnection> getAllConnectionFromSourceToDestination(@RequestParam(value = "from") String sourceAirportIata, @RequestParam(value = "to") String destinationAirportIata) {
+        return flightConnectionBusinessService.findAllConnectionsFromSourceToDestionation(sourceAirportIata, destinationAirportIata);
     }
 
 
