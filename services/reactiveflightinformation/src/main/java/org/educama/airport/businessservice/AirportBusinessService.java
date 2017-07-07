@@ -9,16 +9,20 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service class for Airports.
  */
 @Component
 public class AirportBusinessService {
+
 
     private AirportRepository airportRepository;
     private AirportCsvDeserializer airportCsvDeserializer;
@@ -31,42 +35,44 @@ public class AirportBusinessService {
         this.airportCsvDeserializer = airportCsvDeserializer;
     }
 
-    public Page<Airport> findAllAirports(Pageable pageable) {
-        return airportRepository.findAll(pageable);
+    public Flux<Airport> findAllAirports() {
+        return airportRepository.findAll()
+                .log("org.educama.airport.businessservice");
     }
 
-    public List<Airport> findAirportByIataCode(String iataCode) {
+    public Mono<Airport> findAirportByIataCode(String iataCode) {
         if (StringUtils.isEmpty(iataCode)) {
-            return Collections.emptyList();
+            return Mono.empty();
         }
-        return airportRepository.findByIataCodeIgnoreCase(iataCode);
+        return airportRepository.findByIataCodeIgnoreCase(iataCode)
+                .log("org.educama.airport.businessservice");
     }
 
-    public List<Airport> findAirportByIcaoCode(String icaoCode) {
+    public Mono<Airport> findAirportByIcaoCode(String icaoCode) {
         if (StringUtils.isEmpty(icaoCode)) {
-            return Collections.emptyList();
+            return Mono.empty();
         }
-        return airportRepository.findByIcaoCodeIgnoreCase(icaoCode);
+        return airportRepository.findByIcaoCodeIgnoreCase(icaoCode)
+                .log("org.educama.airport.businessservice");
     }
-    public List<Airport>findAirportsByIataCodeOrIcaoCode(String airportCode){
+    public Mono<Airport>findAirportsByIataCodeOrIcaoCode(String airportCode){
         if (StringUtils.isEmpty(airportCode)) {
-            return Collections.emptyList();
+            return Mono.empty();
         }
         return airportRepository.findByAirportCode(airportCode);
     }
-
-    public List<Airport> findAirportSuggestionsBySearchTerm(String term) {
+    public Flux<Airport> findAirportSuggestionsBySearchTerm(String term) {
         if (StringUtils.isEmpty(term)) {
-            return Collections.emptyList();
+            return Flux.empty();
         }
         return airportRepository.findBySearchTerm(term);
     }
 
     public void clearAndImportAirports(MultipartFile file) throws IOException {
         List<Airport> airports = airportCsvDeserializer.deserialize(file.getInputStream());
-
         airportRepository.deleteAll();
-        airportRepository.save(airports);
+        airports.stream()
+                .forEach(a -> airportRepository.save(a));
     }
 
 }

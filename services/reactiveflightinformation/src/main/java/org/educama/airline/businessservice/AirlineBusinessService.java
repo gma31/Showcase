@@ -3,16 +3,21 @@ package org.educama.airline.businessservice;
 import org.educama.airline.datafeed.AirlineCsvDeserializer;
 import org.educama.airline.model.Airline;
 import org.educama.airline.repository.AirlineRepository;
+import org.reactivestreams.Subscription;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.BaseSubscriber;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Service class for airlines.
@@ -20,7 +25,9 @@ import java.util.List;
 @Component
 public class AirlineBusinessService {
 
+
     private AirlineRepository airlineRepository;
+
 
     private AirlineCsvDeserializer airlineCsvDeserializer;
 
@@ -32,33 +39,34 @@ public class AirlineBusinessService {
         this.airlineCsvDeserializer = airlineCsvDeserializer;
     }
 
-    public Page<Airline> findAllAirlines(Pageable pageable) {
-        return airlineRepository.findAll(pageable);
+    public Flux<Airline> findAllAirlines() {
+        return airlineRepository.findAll()
+                .log("org.educama.airline.businessservice");
     }
 
-    public List<Airline> findAirlinesByIataCode(String iataCode) {
+    public Mono<Airline> findAirlinesByIataCode(String iataCode) {
         if (StringUtils.isEmpty(iataCode)) {
-            return Collections.emptyList();
+            return Mono.empty();
         }
-        return airlineRepository.findByIataCodeIgnoreCase(iataCode);
+        return airlineRepository.findByIataCodeIgnoreCase(iataCode)
+                .log("org.educama.airline.businessservice");
     }
 
-    public List<Airline> findAirlinesByIcaoCode(String icaoCode) {
+    public Mono<Airline> findAirlinesByIcaoCode(String icaoCode) {
         if (StringUtils.isEmpty(icaoCode)) {
-            return Collections.emptyList();
+            Mono.empty();
         }
-        return airlineRepository.findByIcaoCodeIgnoreCase(icaoCode);
+        return airlineRepository.findByIcaoCodeIgnoreCase(icaoCode)
+                .log("org.educama.airline.businessservice");
     }
 
-    public List<Airline> findAirlineSuggestionsBySearchTerm(String term) {
+    public Flux<Airline> findAirlineSuggestionsBySearchTerm(String term) {
         if (StringUtils.isEmpty(term)) {
-            return Collections.emptyList();
+            return Flux.empty();
         }
-
         return airlineRepository.findBySearchTerm(term);
     }
-
-    public List<Airline> findByAirlineByIataCodeOrIcaoCode(String airportCode) {
+    public Mono<Airline> findByAirlineByIataCodeOrIcaoCode(String airportCode) {
         return airlineRepository.findByAirportCode(airportCode);
     }
 
@@ -66,10 +74,11 @@ public class AirlineBusinessService {
         List<Airline> airlines = airlineCsvDeserializer.deserialize(file.getInputStream());
 
         airlineRepository.deleteAll();
-        airlineRepository.save(airlines);
+        airlines.stream()
+                .forEach(a -> airlineRepository.save(a));
     }
-    public List<Airline>findAllAirlines(){
-        return airlineRepository.findAll();
-    }
+
+
+
 
 }
